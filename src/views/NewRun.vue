@@ -1,6 +1,7 @@
 <template>
   <v-card>
-    <v-toolbar dark color="primary">
+    <v-card-title>
+    <v-toolbar dark fixed color="primary">
       <v-btn icon dark @click="close">
         <v-icon>close</v-icon>
       </v-btn>
@@ -10,6 +11,7 @@
         <v-btn dark flat @click="save">Save</v-btn>
       </v-toolbar-items>
     </v-toolbar>
+    </v-card-title>
     <v-form ref="form" v-model="valid" lazy-validation>
       <v-list two-line subheader>
         <v-subheader>General</v-subheader>
@@ -91,7 +93,7 @@
             <v-flex xs6 sm2>
               <v-text-field
                 v-model="runNumber"
-                :rules="[rules.required, rules.runNumber]"
+                :rules="[rules.required, rules.number]"
                 type="number"
                 label="Run Number"
                 required
@@ -625,6 +627,8 @@
 export default {
   name: 'RecordRun',
   data: () => ({
+    valid: true,
+
     // General
     location: null,
 
@@ -699,7 +703,7 @@ export default {
 
     // Delay Box Settings
     delayTime: null,
-    rmpShiftValue: null,
+    rpmShiftValue: null,
     timeShiftValue1: null,
     timeShiftValue2: null,
 
@@ -836,7 +840,8 @@ export default {
     },
     reset() {
       this.$refs.form.reset()
-      document.getElementById('popup-content').scrollTop = 0
+      // TODO:
+      // document.getElementById('popup-content').scrollTop = 0
     }
   }
 }
