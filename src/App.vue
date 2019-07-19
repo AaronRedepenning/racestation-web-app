@@ -2,7 +2,7 @@
   <v-app>
     <Navbar/>
 
-    <v-content>
+    <v-content class="mt-2">
       <router-view></router-view>
     </v-content>
 
@@ -12,12 +12,12 @@
           fab
           bottom
           right
-          color="pink"
+          color="primary"
           dark
           fixed
           v-on="on"
         >
-          <v-icon>add</v-icon>
+          <v-icon>flag</v-icon>
         </v-btn>
       </template>
 

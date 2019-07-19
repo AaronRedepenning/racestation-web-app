@@ -4,6 +4,7 @@ import Router from 'vue-router'
 // Views
 import Dashboard from './views/Dashboard'
 import Run from './views/Run'
+import Weatherstation from './views/Weatherstation'
 
 Vue.use(Router)
 
@@ -19,7 +20,13 @@ export default new Router({
     {
       path: '/run/:id',
       name: 'run',
-      component: Run
+      component: Run,
+      props: true
+    },
+    {
+      path: '/weatherstation',
+      name: 'weatherstation',
+      component: Weatherstation
     }
   ]
 })

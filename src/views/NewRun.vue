@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>
+    <v-card-title class="mb-4">
     <v-toolbar dark fixed color="primary">
       <v-btn icon dark @click="close">
         <v-icon>close</v-icon>
@@ -624,6 +624,8 @@
 </template>
 
 <script>
+import { db } from '../db'
+
 export default {
   name: 'RecordRun',
   data: () => ({
@@ -719,29 +721,26 @@ export default {
       required: val => !!val || 'Required',
       number: val => {
         const re = /^\d+(\.\d+)?$/
-        if(val)
-          return re.test(val) || 'Invalid'
-        else
-          return true
+        if (val) { return re.test(val) || 'Invalid' } else { return true }
       }
     }
   }),
   watch: {
-    date() {
+    date () {
       this.dateFormatted = this.formatDate(this.date)
     },
-    time() {
+    time () {
       this.timeFormatted = this.formatTime(this.time)
     }
   },
   methods: {
-    formatDate(date) {
+    formatDate (date) {
       if (!date) return null
 
       const [year, month, day] = date.split('-')
       return `${month}/${day}/${year}`
     },
-    formatTime(time) {
+    formatTime (time) {
       if (!time) return null
 
       const [hr, min] = time.split(':')
@@ -759,14 +758,14 @@ export default {
         isAm = false
       }
 
-      return `${hour}:${minute} ${isAm ? "AM" : "PM"}`
+      return `${hour}:${minute} ${isAm ? 'AM' : 'PM'}`
     },
-    save() {
+    save () {
       if (this.$refs.form.validate()) {
         // Create a new run object
         const run = {
           location: this.location,
-          datetime: new Date(this.date + " " + this.time),
+          datetime: new Date(this.date + ' ' + this.time),
           runNumber: this.runNumber,
           reaction: this.reaction,
           dialIn: this.dialIn,
@@ -779,7 +778,7 @@ export default {
             at660: this.time660,
             at1000: this.time1000,
             at1320: this.time1320,
-            actual: this.actualEt
+            actual: this.timeActual
           },
           splitSpeeds: {
             at660: this.speed660,
@@ -825,20 +824,19 @@ export default {
           notes: this.notes
         }
 
-        // TODO
-        // db.collection('runs').add(run).then(() => {
-        //   this.reset()
-        // })
+        db.collection('runs').add(run).then(() => {
+          this.reset()
+        })
 
         this.$emit('close')
         this.reset()
       }
     },
-    close() {
+    close () {
       this.$emit('close')
       this.reset()
     },
-    reset() {
+    reset () {
       this.$refs.form.reset()
       // TODO:
       // document.getElementById('popup-content').scrollTop = 0

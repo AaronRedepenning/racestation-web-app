@@ -15,7 +15,7 @@
           <h3>SUMMARY</h3>
           <v-layout row wrap>
             <v-flex xs4 class="run-stat">
-              <div class="value">{{ run.elapsedTime.etActual }}</div>
+              <div class="value">{{ run.splitTimes.actual }}</div>
               <div class="label">Actual ET</div>
             </v-flex>
             <v-flex xs4 class="run-stat">
@@ -27,7 +27,7 @@
               <div class="label">Result</div>
             </v-flex>
             <v-flex xs4 class="run-stat">
-              <div class="value">{{ run.reactionTime }}</div>
+              <div class="value">{{ run.reaction }}</div>
               <div class="label">Reaction Time</div>
             </v-flex>
             <v-flex xs4 class="run-stat">
@@ -69,35 +69,35 @@
               <table>
                 <tr>
                   <td>60' ET</td>
-                  <td>{{ run.elapsedTime.et60 }}</td>
+                  <td>{{ run.splitTimes.at60 }}</td>
                 </tr>
                 <tr>
                   <td>330' ET</td>
-                  <td>{{ run.elapsedTime.et330 }}</td>
+                  <td>{{ run.splitTimes.at330 }}</td>
                 </tr>
                 <tr>
                   <td>660' ET</td>
-                  <td>{{ run.elapsedTime.et660 }}</td>
+                  <td>{{ run.splitTimes.at660 }}</td>
                 </tr>
                 <tr>
                   <td>1000' ET</td>
-                  <td>{{ run.elapsedTime.et1000 }}</td>
+                  <td>{{ run.splitTimes.at1000 }}</td>
                 </tr>
                 <tr>
                   <td>1320' ET</td>
-                  <td>{{ run.elapsedTime.et1320 }}</td>
+                  <td>{{ run.splitTimes.at1320 }}</td>
                 </tr>
                 <tr>
                   <td>Actual ET</td>
-                  <td>{{ run.elapsedTime.etActual }}</td>
+                  <td>{{ run.splitTimes.actual }}</td>
                 </tr>
                 <tr>
                   <td>660' MPH</td>
-                  <td>{{ run.elapsedTime.mph660 }}</td>
+                  <td>{{ run.splitSpeeds.at660 }}</td>
                 </tr>
                 <tr>
                   <td>1320' MPH</td>
-                  <td>{{ run.elapsedTime.mph1320 }}</td>
+                  <td>{{ run.splitSpeeds.at1320 }}</td>
                 </tr>
               </table>
             </v-expansion-panel-content>
@@ -298,93 +298,42 @@
 </template>
 
 <script>
+import { db } from '../db'
+
 export default {
   props: {
     id: {
-      type: Number,
       required: true
     }
   },
-  data() {
+  data () {
     return {
-      run: {
-        location: 'BIR',
-        datetime: new Date('August 19, 1975 23:15:30'),
-        runNumber: 3,
-        reactionTime: -0.103,
-        dialIn: 12.36,
-        lane: 'Left',
-        driver: 'Skylar',
-        result: 'Won',
-        weatherInformation: {
-          densityAltitude: 2068,
-          adjustedAltitude: 1568,
-          temperature: 65.2,
-          humidity: 35,
-          barometricPressure: 28.66,
-          waterGrains: 33,
-          lightValue: null,
-          windSpeed: 8,
-          windDirection: 0
-        },
-        elapsedTime: {
-          et60: 2.565,
-          et330: 7.696,
-          et660: 12.331,
-          et1000: null,
-          et1320: null,
-          etActual: 12.325,
-          mph660: 51.48,
-          mph1320: null
-        },
-        carAdjustments: {
-          primaryJet: 96,
-          secondaryJet: null,
-          squirterSize: null,
-          pilotJet: 32,
-          needle: null,
-          clipPosition: null,
-          slide: 'Black',
-          idleScrew: null,
-          airScrew: null
-        },
-        gearing: {
-          primaryGear: 15,
-          secondaryGear: 84
-        },
-        throttleStopAdjustments: {
-          timer1: null,
-          timer2: null,
-          timer3: null,
-          timer4: null,
-          timer5: null,
-          timer6: null,
-          timer7: null,
-          timer8: null
-        },
-        delayBoxSettings: {
-          delayTime: null,
-          rpmShiftValue: null,
-          timeShiftValue1: null,
-          timeShiftValue2: null
-        },
-        suspensionSettings: {
-          strutSetting: null,
-          rearShockCompress: null,
-          rearShockRebound: null
-        },
-        notes: 'Put everything back like first run.'
-      }
+      run: {}
     }
   },
+  created () {
+    // retrieve a document
+    db.collection('runs')
+      .doc(this.id)
+      .get()
+      .then(snapshot => {
+        this.run = snapshot.data()
+      })
+  },
   computed: {
-    timeDateString() {
-      var weekday = this.run.datetime.toLocaleString('en-US', { weekday: 'long' })
-      var month = this.run.datetime.toLocaleString('en-US', { month: 'short' })
-      var day = this.run.datetime.toLocaleString('en-US', { day: 'numeric' })
-      var time = this.run.datetime.toLocaleTimeString('en-US')
+    timeDateString () {
+      if ('datetime' in this.run) {
+        const dt = this.run.datetime.toDate()
 
-      return `${weekday}, ${month} ${day} at ${time}`
+        var weekday = dt.toLocaleString('en-US', { weekday: 'long' })
+        var month = dt.toLocaleString('en-US', { month: 'short' })
+        var day = dt.toLocaleString('en-US', { day: 'numeric' })
+        var time = dt.toLocaleTimeString('en-US')
+
+        return `${weekday}, ${month} ${day} at ${time}`
+      } else {
+        return ''
+      }
     }
   }
 }
