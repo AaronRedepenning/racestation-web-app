@@ -162,7 +162,7 @@ export default {
   computed: {
     currentWeather () {
       if (this.weather.length > 0) {
-        return this.weather[0]
+        return this.weather[this.weather.length - 1]
       } else {
         return {}
       }
