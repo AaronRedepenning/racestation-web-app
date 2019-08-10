@@ -190,7 +190,7 @@ export default {
           time = minutes
           units = 'minutes'
 
-          if (minutes >= 30) {
+          if (minutes <= 30) {
             online = true
           }
         } else {
