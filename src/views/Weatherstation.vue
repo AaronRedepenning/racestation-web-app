@@ -20,7 +20,7 @@
               <v-layout row wrap>
                 <v-flex xs12 md4>
                   <div>
-                    <span class="display-3" style="color: rgb(182, 198, 9);">77&#176;</span>
+                    <span class="display-3" style="color: rgb(182, 198, 9);">{{ Math.floor(currentWeather.Temperature) }}&#176;</span>
                     <span class="title font-weight-light"> F</span>
                   </div>
                 </v-flex>
@@ -177,7 +177,7 @@ export default {
   computed: {
     currentWeather () {
       if (this.weather.length > 0) {
-        return this.weather[0]
+        return this.weather[this.weather.length - 1]
       } else {
         return {}
       }
