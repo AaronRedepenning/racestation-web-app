@@ -93,10 +93,9 @@
             <v-flex xs6 sm2>
               <v-text-field
                 v-model="runNumber"
-                :rules="[rules.required, rules.number]"
+                :rules="[rules.number]"
                 type="number"
                 label="Run Number"
-                required
               >
               </v-text-field>
             </v-flex>
