@@ -88,7 +88,7 @@
               <h3>Recent Races</h3>
               <v-spacer/>
               <v-spacer></v-spacer>
-              <v-btn small outline color="primary">
+              <v-btn small outline color="primary" @click="exportToCSV">
                 Export to CSV
               </v-btn>
             </v-card-title>
@@ -127,6 +127,7 @@
 
 <script>
 import { db } from '../db'
+import CSV from '../csv'
 
 export default {
   data () {
@@ -157,6 +158,9 @@ export default {
       var time = datetime.toLocaleTimeString('en-US').replace(/:00([^:00]*)$/, '$1')
 
       return `${month}/${day} at ${time}`
+    },
+    exportToCSV () {
+      CSV.export(this.runs)
     }
   },
   computed: {
