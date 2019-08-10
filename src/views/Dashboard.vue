@@ -88,16 +88,16 @@
               <h3>Recent Races</h3>
               <v-spacer/>
               <v-spacer></v-spacer>
-              <v-btn small outline color="primary" class="hidden-sm-and-down">
+              <v-btn small outline color="primary">
                 Export to CSV
               </v-btn>
             </v-card-title>
             <v-card-text style="background-color: #fafafa;">
               <table>
                 <tr>
-                  <th>Location</th>
-                  <th>Date/Time</th>
-                  <th>Actions</th>
+                  <th style="margin: 12px 12px;">Location</th>
+                  <th style="margin: 12px 12px;">Date/Time</th>
+                  <th style="margin: 12px 12px;">Actions</th>
                 </tr>
                 <tr v-for="(run, index) in runs" :key="index">
                   <td>{{ run.location }}</td>
@@ -136,9 +136,9 @@ export default {
     }
   },
   firestore: {
-    runs: db.collection('runs'),
+    runs: db.collection('runs').orderBy('datetime', 'desc'),
     // TODO: Get weather from past 12 hours?
-    weather: db.collection('weather').orderBy('Timestamp')
+    weather: db.collection('weather').orderBy('Timestamp', 'desc')
   },
   methods: {
     toHeading (val) {
@@ -151,7 +151,7 @@ export default {
       return headings[(angle % 16)]
     },
     dateTimeString (datetime) {
-      datetime = new Date('August 19, 1975 23:15:00 GMT+00')
+      datetime = datetime.toDate()
       var month = datetime.toLocaleString('en-US', { month: 'numeric' })
       var day = datetime.toLocaleString('en-US', { day: 'numeric' })
       var time = datetime.toLocaleTimeString('en-US').replace(/:00([^:00]*)$/, '$1')
@@ -162,7 +162,7 @@ export default {
   computed: {
     currentWeather () {
       if (this.weather.length > 0) {
-        return this.weather[this.weather.length - 1]
+        return this.weather[0]
       } else {
         return {}
       }
@@ -212,45 +212,24 @@ export default {
       }
     }
   }
-  // created() {
-  //   this.runsUnsubscribe = db.collection('runs').onSnapshot(res => {
-  //     const changes = res.docChanges()
-
-  //     changes.forEach(change => {
-  //       if(change.type === 'added') {
-  //         this.runs.push({
-  //           ...change.doc.data(),
-  //           id: change.doc.id
-  //         })
-  //       }
-  //     })
-  //   })
-
-  //   this.weatherUnsubscribe = db.collection("weather").onSnapshot(res => {
-  //     const changes = res.docChanges()
-
-  //     if(changes.length > 0) {
-  //       this.weather = {
-  //         ...changes[0].doc.data(),
-  //         id: changes[0].doc.id
-  //       }
-  //     }
-  //   })
-
-  //   this.intervalHandle = setInterval(() => {
-  //     this.now = Math.floor(Date.now() / 1000)
-  //   }, 5000)
-  // },
-  // destroyed() {
-  //   this.runsUnsubscribe()
-  //   this.weatherUnsubscribe()
-
-  //   clearInterval(this.intervalHandle)
-  // }
 }
 </script>
 
 <style scoped>
+table {
+  width: 100%;
+}
+
+th, td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+  background-color: #f5f5f5;
+}
+
 .circle {
   height: 10px;
   width: 10px;

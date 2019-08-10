@@ -153,7 +153,7 @@
                   v-for="(driver, idx) in drivers"
                   :key="idx"
                   :label="driver"
-                  :value="driver[idx]"
+                  :value="drivers[idx]"
                 >
                 </v-radio>
               </v-radio-group>
@@ -751,11 +751,13 @@ export default {
       if (hour === 0) {
         hour = 12
         isAm = true
-      } else if (hour > 0) {
-        isAm = true
+      } else if (hour === 12) {
+        isAm = false
       } else if (hour > 12) {
         hour -= 12
         isAm = false
+      } else if (hour > 0) {
+        isAm = true
       }
 
       return `${hour}:${minute} ${isAm ? 'AM' : 'PM'}`

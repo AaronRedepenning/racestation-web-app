@@ -172,12 +172,12 @@ export default {
   }),
   firestore: {
     // TODO: Get weather from past 12 hours?
-    weather: db.collection('weather').orderBy('Timestamp')
+    weather: db.collection('weather').orderBy('Timestamp', 'desc')
   },
   computed: {
     currentWeather () {
       if (this.weather.length > 0) {
-        return this.weather[this.weather.length - 1]
+        return this.weather[0]
       } else {
         return {}
       }
